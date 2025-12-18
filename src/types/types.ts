@@ -17,7 +17,8 @@ export interface AuthRequest extends Request {
         id: string,
         email: string,
         role?: Role
-    }
+    },
+    orgId?: string
 }
 
 export enum Role {

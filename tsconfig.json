@@ -8,6 +8,7 @@
     "esModuleInterop": true, 
     "strict": true, 
     "baseUrl": "./src",
+    "typeRoots": ["./src/types", "./node_modules/@types"],
     "paths": {"@common/*":["common/*"]}
   },
   "include": ["src/**/*"],

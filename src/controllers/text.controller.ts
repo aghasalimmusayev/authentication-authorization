@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import { getUserPermissions } from "services/permissions.service"
-import { buildPermsSet } from "utils/permissionKeys"
+import { buildPermsSet } from "utils/permissions"
 
 export async function userPermissions(req: Request, res: Response, next: NextFunction) {
     try {
