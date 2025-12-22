@@ -1,7 +1,8 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { createUser } from "services/admin.service";
+import { AuthRequest } from "types/types";
 
-export async function createUserController(req: Request, res: Response, next: NextFunction) {
+export async function createUserController(req: AuthRequest, res: Response, next: NextFunction) {
     try {
         const { username, email, password_hash, role } = req.body
         if (!username || !email || !password_hash || !role) {
@@ -12,7 +13,8 @@ export async function createUserController(req: Request, res: Response, next: Ne
                 detail: "Username, email or password require"
             })
         }
-        const result = await createUser({ username, email, password_hash, role })
+        if (!req.organization_id) return res.status(400).json({ message: 'Organization not found' })
+        const result = await createUser({ username, email, password_hash, role, organization_id: req.organization_id })
         if (!result.success) return res.status(409).json({ message: result.error })
         res.cookie('refreshToken', result.refreshToken, {
             httpOnly: true,

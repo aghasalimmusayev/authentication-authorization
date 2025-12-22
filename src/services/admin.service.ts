@@ -10,12 +10,14 @@ export async function createUser(data: RegisterDto) {
             username: data.username,
             email: data.email,
             password_hash: hashedPassword,
-            role: data.role
+            role: data.role,
+            organization_id: data.organization_id
         })
         const accessToken = generateAccessToken({
             id: user.id,
             email: user.email,
-            role: user.role
+            role: user.role,
+            organization_id: user.organization_id
         })
         const refreshToken = generateRefreshToken()
         await saveToken(user.id, refreshToken)
@@ -25,7 +27,8 @@ export async function createUser(data: RegisterDto) {
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                organization_id: user.organization_id
             },
             accessToken,
             refreshToken

@@ -1,6 +1,6 @@
 import pool from "db/connection"
 
-export async function getUserPermissions(userId: string, orgId: string) {
+export async function getUserPermissions(userId: string, orgId: number) {
     const result = await pool.query(`
         SELECT distinct p.resource, p.action
             FROM user_roles ur

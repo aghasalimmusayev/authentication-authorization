@@ -22,6 +22,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     try {
         const decoded = verifyToken(token) // accesstoken
         req.user = decoded
+        req.organization_id = decoded.organization_id
         next()
     } catch (err) {
         return res.status(401).json({

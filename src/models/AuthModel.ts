@@ -1,17 +1,21 @@
 import pool from "db/connection";
 import { RegisterDto } from "types/types";
+const DEFAULT_ORG_ID = Number(process.env.DEFAULT_ORG_ID ?? 1)
 
 export class AuthModel {
 
     static async registerModel(username: string, email: string, password_hash: string) {
-        const result = await pool.query(`insert into users (username, email, password_hash) values ($1, $2, $3) 
-            returning id, username, email, created_at`, [username, email, password_hash])
+        const result = await pool.query(`insert into users (username, email, password_hash, organization_id) 
+            values ($1, $2, $3, $4) 
+            returning id, username, email, organization_id, created_at`, [username, email, password_hash, DEFAULT_ORG_ID])
         return result.rows[0]
     }
 
     static async create(data: RegisterDto) {
-        const result = await pool.query(`insert into users (username, email, password_hash, role) values ($1, $2, $3, $4) 
-            returning id, username, email, role, created_at`, [data.username, data.email, data.password_hash, data.role])
+        const result = await pool.query(`insert into users (username, email, password_hash, role, organization_id) 
+            values ($1, $2, $3, $4, $5) 
+            returning id, username, email, role, organization_id, created_at`,
+            [data.username, data.email, data.password_hash, data.role, DEFAULT_ORG_ID])
         return result.rows[0]
     }
 

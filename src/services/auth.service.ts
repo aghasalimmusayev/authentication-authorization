@@ -7,7 +7,12 @@ async function register(username: string, email: string, password_hash: string) 
     try {
         const hashed_password = await hashPassword(password_hash)
         const user = await AuthModel.registerModel(username, email, hashed_password)
-        const accessToken = generateAccessToken({ id: user.id, email: user.email, role: Role.USER })
+        const accessToken = generateAccessToken({
+            id: user.id,
+            email: user.email,
+            role: Role.USER,
+            organization_id: user.organization_id
+        })
         const refreshToken = generateRefreshToken()
         await saveToken(user.id, refreshToken)
         return {
@@ -16,7 +21,8 @@ async function register(username: string, email: string, password_hash: string) 
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                organization_id: user.organization_id
             },
             accessToken,
             refreshToken
@@ -44,7 +50,12 @@ async function login(usernameOrEmail: string, password: string) {
             error: 'Password invalid'
         }
         await cleanUpTokens(user.id)
-        const accessToken = generateAccessToken({ id: user.id, email: user.email, role: Role.USER })
+        const accessToken = generateAccessToken({
+            id: user.id,
+            email: user.email,
+            role: Role.USER,
+            organization_id: user.organization_id
+        })
         const refreshToken = generateRefreshToken()
         await saveToken(user.id, refreshToken)
         return {
@@ -52,7 +63,8 @@ async function login(usernameOrEmail: string, password: string) {
             user: {
                 id: user.id,
                 username: user.username,
-                email: user.email
+                email: user.email,
+                organization_id: user.organization_id
             },
             accessToken,
             refreshToken
@@ -72,7 +84,8 @@ async function refreshAccessToken(token: string): Promise<RefreshResult> {
     const accessToken = generateAccessToken({
         id: result.user_id,
         email: result.email,
-        role: result.role
+        role: result.role,
+        organization_id: result.organization_id
     })
     return { success: true, accessToken: accessToken }
 }

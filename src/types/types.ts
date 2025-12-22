@@ -4,7 +4,8 @@ export type RegisterDto = {
     username?: string
     email: string,
     password_hash: string,
-    role?: Role
+    role?: Role,
+    organization_id: number
 }
 
 export type LoginDto = {
@@ -18,7 +19,7 @@ export interface AuthRequest extends Request {
         email: string,
         role?: Role
     },
-    orgId?: string
+    organization_id?: number
 }
 
 export enum Role {
@@ -27,10 +28,11 @@ export enum Role {
 }
 
 export interface JwtPayload {
-    id: string,
-    email: string,
-    type?: 'access' | 'refresh',
+    id: string
+    email: string
     role: Role
+    organization_id: number
+    type?: "access" | "refresh"
 }
 
 export type Permissions = {
