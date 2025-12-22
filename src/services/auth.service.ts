@@ -2,6 +2,7 @@ import { hashPassword } from 'utils/hash'
 import { cleanUpTokens, generateAccessToken, generateRefreshToken, saveToken, verifyPassword, verifyRefreshToken } from 'utils/jwt'
 import { AuthModel } from 'models/AuthModel'
 import { Role } from 'types/types'
+import { sendMailToUser } from 'utils/mailer'
 
 async function register(username: string, email: string, password_hash: string) {
     try {
@@ -15,6 +16,7 @@ async function register(username: string, email: string, password_hash: string) 
         })
         const refreshToken = generateRefreshToken()
         await saveToken(user.id, refreshToken)
+        await sendMailToUser(user.email, user.username)
         return {
             success: true,
             user: {
