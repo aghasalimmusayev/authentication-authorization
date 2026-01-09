@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { changePass, login, logout, profile, refreshAccessToken, register } from "../services/auth.service";
+import { login, logout, profile, refreshAccessToken, register } from "../services/auth.service";
 import { AuthRequest } from "types/types";
 
 export async function registerUser(req: Request, res: Response, next: NextFunction) {
@@ -154,19 +154,3 @@ export async function getProfile(req: AuthRequest, res: Response, next: NextFunc
     }
 }
 
-export async function changePassword(req: AuthRequest, res: Response, next: NextFunction) {
-    try {
-        const { newPassword, oldPassword } = req.body
-        const user = await profile(req.user!.id)
-        if (!user) return res.status(401).json({
-            type: "application/problem+json",
-            status: 401,
-            title: "Unauthorized",
-            detail: "You didn`t logged in"
-        })
-        const result = await changePass(user.id, newPassword, oldPassword)
-        return res.status(200).json(result)
-    } catch (err) {
-        return next(err)
-    }
-}

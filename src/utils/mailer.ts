@@ -47,3 +47,14 @@ export const sendVerificatedMailToUser = async (email: string, name: string) => 
             <p>TodoApp-dan sitifade etdiyiniz ucun tesekkurler!!!</p>`
     })
 }
+
+export const resetPasswordLink = async (email: string, code: string) => {
+    await transporter.sendMail({
+        from: `"TodoApp" <${process.env.MAIL_USER}>`,
+        to: email,
+        subject: "From TodoApp",
+        html: `
+            <h3>Aşağıdakı linkə daxil olaraq parolunuzu sıfırlaya bilərsiz</h3>
+            <a href="http://localhost:3014/api/auth/reset-password=${code}">reset your password</a>`
+    })
+}

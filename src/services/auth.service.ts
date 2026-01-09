@@ -4,6 +4,8 @@ import { AuthModel } from 'models/AuthModel'
 import { Role } from 'types/types'
 import { sendMailToUser } from 'utils/mailer'
 import { AppError } from 'errors/error'
+import crypto, { createHash } from 'crypto'
+import { Password } from 'models/Password.model'
 
 async function register(username: string, email: string, password_hash: string) {
     try {
@@ -106,16 +108,5 @@ async function profile(userId: string) {
     return user
 }
 
-async function changePass(userId: string, newPass: string, oldPass: string) {
-    const user = await AuthModel.findUserById(userId)
-    if (!user) throw new AppError('Unauthorized', 401)
-    const checkOldPass = await comparePassword(oldPass, user.password_hash)
-    if (!checkOldPass) throw new AppError('Your password is not correct', 409)
-    if (newPass === oldPass) throw new AppError('The new password can not be the same', 409)
-    const hashedPassword = await hashPassword(newPass)
-    await AuthModel.updatePass(hashedPassword, userId)
-    return { message: 'You have succesfully changed your password' }
-}
-
-export { register, login, refreshAccessToken, logout, profile, changePass }
+export { register, login, refreshAccessToken, logout, profile }
 

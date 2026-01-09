@@ -13,16 +13,6 @@ export class VerificationModel {
         return result.rows[0]
     }
 
-    // static async checkVerifiedEmail(email: string) {
-    //     const result = await pool.query(`select * from users where email = $1 and is_verified = true`, [email])
-    //     return result.rowCount
-    // }
-
-    // static async findOtpByEmail(email: string) {
-    //     const result = await pool.query(`select email_verification_code from users where email = $1`, [email])
-    //     return result.rows[0]
-    // }
-
     static async checkExpires(expires: Date) {
         const result = await pool.query(`select 1 WHERE $1 < NOW()`, [expires])
         return Number(result.rowCount) > 0

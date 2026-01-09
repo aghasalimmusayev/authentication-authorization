@@ -1,4 +1,3 @@
-import pool from "db/connection";
 import { AppError } from "errors/error";
 import { VerificationModel } from "models/verification.model";
 import { sendCodeToMail, sendVerificatedMailToUser } from "utils/mailer";

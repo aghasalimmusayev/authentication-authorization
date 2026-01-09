@@ -1,6 +1,6 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import route from 'routes/route'
+import route from 'routes/auth.route'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import helmet from 'helmet'

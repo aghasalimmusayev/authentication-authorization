@@ -1,10 +1,11 @@
-import { changePassword, getProfile, loginUser, logoutAllDevices, logoutUser, me, refreshToken, registerUser } from "controllers/auth.controller";
+import { getProfile, loginUser, logoutAllDevices, logoutUser, me, refreshToken, registerUser } from "controllers/auth.controller";
 import { Router } from "express";
 import { authMiddleware } from "middlewares/auth.middleware";
 import { requireRole } from "middlewares/role.middleware";
 import { Role } from "types/types";
 import { createUserController } from "controllers/admin.controller";
 import { rateLimiter } from "utils/helper";
+import { changePassword, forgetPassword, resetPassword } from "controllers/password.controller";
 
 const route = Router()
 
@@ -13,6 +14,8 @@ route.post('/register', registerUser) // ✅
 route.post('/login', rateLimiter(10, 3), loginUser) // ✅
 route.post('/logout', logoutUser) // ✅
 route.post('/refresh', refreshToken) // ✅
+route.post('/forget-password', forgetPassword) // ✅
+route.post('/reset-password', resetPassword) // ✅
 
 // Protected routes
 route.get('/me', authMiddleware, me) // ✅
