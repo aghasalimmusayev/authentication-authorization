@@ -36,4 +36,14 @@ export class AuthModel {
         return result.rows[0]
     }
 
+    static async findUserById(userId: string) {
+        const result = await pool.query(`select * from users where id = $1`, [userId])
+        return result.rows[0]
+    }
+
+    static async updatePass(newPass: string, userId: string) {
+        const result = await pool.query(`update users set password_hash = $1 where id = $2`, [newPass, userId])
+        return result.rows[0]
+    }
+
 }

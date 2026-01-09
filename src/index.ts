@@ -36,7 +36,7 @@ app.use('/api/auth', verificationRoute)
 app.use((err: any, req: any, res: any, next: any) => {
     console.error('ERROR:', err);
     const statusCode = err instanceof AppError ? err.statusCode : 500
-    return res.status(500).json({
+    return res.status(statusCode).json({
         type: "application/problem+json",
         status: statusCode,
         title: statusCode === 500 ? "Internal Server Error" : "Error",

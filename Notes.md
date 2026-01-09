@@ -1,4 +1,4 @@
-* User1 {id: 4, password_hash: "123abs"}
+* User1 {id: 4, password_hash: "123456abs"}
 ### verification email
     1.  email adresi yazib post edilir: {email}=req.body
         otp code yaradilir - utils/otp.ts

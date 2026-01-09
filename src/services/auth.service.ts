@@ -1,4 +1,4 @@
-import { hashPassword } from 'utils/hash'
+import { comparePassword, hashPassword } from 'utils/hash'
 import { cleanUpTokens, generateAccessToken, generateRefreshToken, saveToken, verifyPassword, verifyRefreshToken } from 'utils/jwt'
 import { AuthModel } from 'models/AuthModel'
 import { Role } from 'types/types'
@@ -100,5 +100,22 @@ async function logout(refreshToken: string, harddelete: boolean = false) {
     return { success: true }
 }
 
-export { register, login, refreshAccessToken, logout }
+async function profile(userId: string) {
+    const user = await AuthModel.findUserById(userId)
+    if (!user) throw new AppError('User not found', 404)
+    return user
+}
+
+async function changePass(userId: string, newPass: string, oldPass: string) {
+    const user = await AuthModel.findUserById(userId)
+    if (!user) throw new AppError('Unauthorized', 401)
+    const checkOldPass = await comparePassword(oldPass, user.password_hash)
+    if (!checkOldPass) throw new AppError('Your password is not correct', 409)
+    if (newPass === oldPass) throw new AppError('The new password can not be the same', 409)
+    const hashedPassword = await hashPassword(newPass)
+    await AuthModel.updatePass(hashedPassword, userId)
+    return { message: 'You have succesfully changed your password' }
+}
+
+export { register, login, refreshAccessToken, logout, profile, changePass }
 
