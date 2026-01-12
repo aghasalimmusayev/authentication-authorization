@@ -6,6 +6,7 @@ import { Role } from "types/types";
 import { createUserController } from "controllers/admin.controller";
 import { rateLimiter } from "utils/helper";
 import { changePassword, forgetPassword, resetPassword } from "controllers/password.controller";
+import { privateProfile } from "middlewares/private.middleware";
 
 const route = Router()
 
@@ -16,6 +17,7 @@ route.post('/logout', logoutUser) // ✅
 route.post('/refresh', refreshToken) // ✅
 route.post('/forget-password', forgetPassword) // ✅
 route.post('/reset-password', resetPassword) // ✅
+route.get('/users:id', privateProfile) //? Test edilmelidir
 
 // Protected routes
 route.get('/me', authMiddleware, me) // ✅

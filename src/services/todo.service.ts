@@ -1,4 +1,5 @@
 import { AppError } from "errors/error";
+import { AuthModel } from "models/AuthModel";
 import { member } from "models/Permission.model";
 import { TodoModel } from "models/Todo.model";
 
@@ -18,3 +19,11 @@ export async function deleteTodoService(id: string) {
     return true
 }
 
+export async function completeTodoService(id: string, userId: string) {
+    const user = await AuthModel.findUserById(userId)
+    if (!user) throw new AppError('User not found', 404)
+    const todo = await TodoModel.findById(id)
+    if (!todo) throw new AppError('Todo not found', 404)
+    const completedTodo = await TodoModel.completeTodo(todo.id, user.id)
+    return completedTodo
+}
