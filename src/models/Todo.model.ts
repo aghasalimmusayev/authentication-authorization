@@ -24,5 +24,10 @@ export class TodoModel {
             update todos set is_completed = NOT is_completed where id = $1 and user_id = $2 returning *`, [id, user_id])
         return result.rows[0]
     }
+
+    static async search(userId: string, search: string) {
+        const result = await pool.query(`select * from todos where user_id = $1 and title ILIKE $2`, [userId, `%${search}%`])
+        return result.rows
+    }
 }
 

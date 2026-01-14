@@ -27,3 +27,11 @@ export async function completeTodoService(id: string, userId: string) {
     const completedTodo = await TodoModel.completeTodo(todo.id, user.id)
     return completedTodo
 }
+
+export async function searchTodoService(userId: string, search: string) {
+    const user = await AuthModel.findUserById(userId)
+    if (!user) throw new AppError('User not found', 404)
+    const todo = await TodoModel.search(userId, search)
+    if (todo.length === 0) throw new AppError('Todo not found', 404)
+    return todo
+}

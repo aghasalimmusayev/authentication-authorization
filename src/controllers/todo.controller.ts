@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { completeTodoService, createTodoService, deleteTodoService } from "services/todo.service";
+import { completeTodoService, createTodoService, deleteTodoService, searchTodoService } from "services/todo.service";
 import { AuthRequest } from "types/types";
 
 export async function deleteTodo(req: AuthRequest, res: Response, next: NextFunction) {
@@ -46,6 +46,20 @@ export async function updateStatusTodo(req: AuthRequest, res: Response, next: Ne
         const updatedTodo = await completeTodoService(todoId, userId)
         if (!updatedTodo) return res.status(400).json({ error: 'Error in updating Todo status' })
         return res.status(200).json({ success: true, message: 'Your todo status have changed succesfully' })
+    } catch (err) {
+        next(err)
+    }
+}
+
+export async function searchTodo(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+        const userId = req.user?.id
+        if (!userId) return res.status(401).json({ message: 'Unauthorized' })
+        const search = (req.query.search ?? '').toString().trim()
+        if (!search) return res.status(400).json({ message: 'Search text is required' })
+        const todos = await searchTodoService(userId, search)
+        if (!todos) return res.status(404).json({ message: 'Todo for this User not found' })
+        return res.status(200).json(todos)
     } catch (err) {
         next(err)
     }
